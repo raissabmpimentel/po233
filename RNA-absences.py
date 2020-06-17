@@ -1,77 +1,104 @@
-#!env python
+#!python
+# -*- coding: utf-8 -*-
 
-# Import libs
 import pandas as pd
-import numpy as np
-
-def RNA_Regression(dataV, targetV, seed, algorithm, max_iteractions, es):
-    # Regression
-    data_train, data_test, target_train, target_test = train_test_split(dataV, targetV, random_state=seed, test_size=0.1)
-    regression = MLPRegressor(random_state=seed, early_stopping=es, max_iter=max_iteractions, solver=algorithm).fit(data_train, target_train)
-    
-    # Regression Score
-    score = regression.score(data_test, target_test)
-    
-    # Square Mean Error
-    target_pred = regression.predict(data_test)
-    sqe = mean_squared_error(target_test, target_pred)
-    return (sqe, score)
-
-# Import data
-data_filename = "dados/pre_processed_data.csv"
-data = pd.read_csv(data_filename)
-
-# Separating target attribute
-target = data['absences']
-data = data.drop(columns=['absences'])
-original = data
-
-# Scikit Learn MLP Regression
-from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.neural_network import MLPRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from math import sqrt
+from sklearn.preprocessing import StandardScaler
 
-# My training
-seed = 1
-algorithm = 'adam' # 'adam', 'sgd', 'lbfgs'
-max_iteractions = 10000
-early_stopping = True
+def treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol):
+    previsores_treinamento, previsores_teste, y_treinamento, y_teste = train_test_split(previsores, y, test_size=test_size, random_state=4)
+    
+    prep = StandardScaler()       
+    prep.fit(previsores_treinamento)
+    
+    regressor = MLPRegressor(verbose = verbose,
+                                  max_iter=max_iter,
+                                  solver = solver,
+                                  activation=activation,
+                                  tol=tol,
+                                  random_state=random_state,
+                                  )
+    
+    regressor.fit(prep.transform(previsores_treinamento), y_treinamento)
+    previsoes = regressor.predict(prep.transform(previsores_teste))
+    
+    mse = mean_squared_error(y_teste, previsoes)
+    score = regressor.score(prep.transform(previsores_teste), y_teste)
+    return (mse, score)
 
-# {G1, G2, G3}
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G1, G2, G3] - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+#base = pd.read_csv('dados/pre_processed_data.csv')
+#y = base['G3'].values
 
-# {G1, G2}
-data = original.drop(columns=['G3'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G1, G2]     - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+test_size = 0.2
+max_iter = 1500
+solver = 'adam'
+activation = 'relu'
+random_state = 4
+verbose = False
+tol = 1e-5
 
-# {G1, G3}
-data = original.drop(columns=['G2'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G1, G3]     - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+base = pd.read_csv('dados/student-por.csv', sep = ";")
+base = base.drop(['school'], axis=1)
+base = base.replace(['LE3', 'GT3'], [0,1])
+items = ['sex', 'address','Pstatus','Mjob','Fjob','reason','guardian','schoolsup','famsup','paid','activities','nursery','higher',
+         'internet','romantic']
 
-# {G2, G3}
-data = original.drop(columns=['G1'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G2, G3]     - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+for item in items:
+    base = pd.concat([base,pd.get_dummies(base[item], prefix=item)],axis=1)
+    base = base.drop([item],axis=1)
 
-# {G1}
-data = original.drop(columns=['G2', 'G3'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G1]         - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+y = base['absences'].values
 
-# {G2}
-data = original.drop(columns=['G1', 'G3'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G2]         - SQE: {sqe:.5f}    |    Score: {score:.5f}")
 
-# {G3}
-data = original.drop(columns=['G1', 'G2'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[G3]         - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+# [G1, G2, G3]
+print(f"[G1, G2, G3]:\n")
+previsores = base.drop(columns=['absences']).values
+precisao_1, score_1 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
 
-# {}
-data = original.drop(columns=['G1', 'G2', 'G3'])
-(sqe, score) = RNA_Regression(data, target, seed, algorithm, max_iteractions, early_stopping)
-print(f"[]           - SQE: {sqe:.5f}    |    Score: {score:.5f}")
+print(f"MSE: {precisao_1} Score: {score_1}\n")
+
+# [G1, G2]
+print(f"[G1, G2]:\n")
+previsores = base.drop(columns=['absences','G3']).values
+precisao_2, score_2 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_2} Score: {score_2}\n")
+
+    
+# [G2, G3]
+print(f"[G2, G3]:\n")
+previsores = base.drop(columns=['G1','absences']).values
+precisao_3, score_3 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_3} Score: {score_3}\n")
+
+# [G1, G3]
+print(f"[G1, G3]:\n")
+previsores = base.drop(columns=['G2','absences']).values
+precisao_4, score_4 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_4} Score: {score_4}\n")
+
+# [G1]
+print(f"[G1]:\n")
+previsores = base.drop(columns=['G3', 'G2','absences']).values
+precisao_5, score_5 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_5} Score: {score_5}\n")
+
+# [G2]
+print(f"[G2]:\n")
+previsores = base.drop(columns=['G3', 'G1','absences']).values
+precisao_6, score_6 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_6} Score: {score_6}\n")
+
+# [G1]
+print(f"[G3]:\n")
+previsores = base.drop(columns=['G1', 'G2','absences']).values
+precisao_7, score_7 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_7} Score: {score_7}\n")
+
+# []
+print(f"[]:\n")
+previsores = base.drop(columns=['G1', 'G3', 'G2','absences']).values
+precisao_8, score_8 = treinamento(test_size, max_iter, solver, activation, random_state, verbose, tol)
+print(f"MSE: {precisao_8} Score: {score_8}\n")
