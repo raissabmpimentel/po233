@@ -75,7 +75,8 @@ def search(X,y,n_splits, random_state,algorithms, title):
     print("cd:", cd)
     Orange.evaluation.graph_ranks(avranks, names, cd=cd, width=6, textspace=1.5)
     plt.title(title)
-    plt.show()
+    #plt.show()
+    plt.savefig('img/CLA' + title + '.png', bbox_inches='tight')
     
     return df_metrics
 
@@ -83,7 +84,7 @@ algorithms = {
     "MLP": (MLPClassifier(), { "activation": ("identity", "logistic", "tanh", "relu"), "solver": ("lbfgs", "adam"), "max_iter": [1000], "random_state": [1]}), 
     "SVM": (SVC(), {"C": [1, 10], "kernel": ("linear", "rbf"), "random_state": [2]}),
     "KNN": (KNeighborsClassifier(), { "n_neighbors": [1, 3, 5] }),
-    #"DT" : (DecisionTreeClassifier(), { "criterion": ("gini", "entropy"), "max_depth": [5, 10, 20], "random_state": [3]}),
+    "DT" : (DecisionTreeClassifier(), { "criterion": ("gini", "entropy"), "max_depth": [5, 10, 20], "random_state": [3]}),
     "RF" : (RandomForestClassifier(), { "criterion": ("gini", "entropy"), "max_depth": [5, 10, 20], "n_estimators": [30,50,100], "random_state": [4]})
 }
 
@@ -105,7 +106,7 @@ print("Medias:")
 print(df_G1_G2.mean())
 print("Desvio Padrao: ")
 print(df_G1_G2.std())
-df_G1_G2.to_csv('output-classification/df_metrics_G1_G2.csv')
+df_G1_G2.to_csv('output-classification/df_metrics_class_from_G1_G2.csv')
 
 # [G1]
 print("[G1]")
@@ -116,7 +117,7 @@ print("Medias:")
 print(df_G1.mean())
 print("Desvio Padrao: ")
 print(df_G1.std())
-df_G1.to_csv('output-classification/df_metrics_G1.csv')
+df_G1.to_csv('output-classification/df_metrics_class_from_G1.csv')
 
 # [G2]
 print("[G2]")
@@ -127,6 +128,6 @@ print("Medias:")
 print(df_G2.mean())
 print("Desvio Padrao: ")
 print(df_G2.std())
-df_G2.to_csv('output-classification/df_metrics_G2.csv')
+df_G2.to_csv('output-classification/df_metrics_class_from_G2.csv')
 
 

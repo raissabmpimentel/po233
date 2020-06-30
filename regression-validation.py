@@ -109,7 +109,7 @@ def search(X, y, n_splits, random_state, algorithms, title):
     Orange.evaluation.graph_ranks(avranks, names, cd=cd, width=6, textspace=1.5)
     plt.title(title)
     #plt.show()
-    plt.savefig('img/' + title + '.png')
+    plt.savefig('img/REG' + title + '.png', bbox_inches='tight')
     
     return df_metrics
 
@@ -137,7 +137,7 @@ y = base['G3'].to_numpy()
 # [G1, G2]
 print("[G1, G2]")
 X = base.drop(columns = ['G3']).to_numpy()
-df_G3_from_G1_G2 = search(X,y,n_splits,random_state,algorithms,"G3 from [G1, G2]")
+df_G3_from_G1_G2 = search(X,y,n_splits,random_state,algorithms,"[G1, G2]")
 print(df_G3_from_G1_G2)
 print("Medias:")
 print(df_G3_from_G1_G2.mean())
@@ -148,7 +148,7 @@ df_G3_from_G1_G2.to_csv('output-regression/df_metrics_G3_from_G1_G2.csv')
 # [G1]
 print("[G1]")
 X = base.drop(columns = ['G3', 'G2']).to_numpy()
-df_G3_from_G1 = search(X,y,n_splits,random_state,algorithms,"G3 from [G1]")
+df_G3_from_G1 = search(X,y,n_splits,random_state,algorithms,"[G1]")
 print(df_G3_from_G1)
 print("Medias:")
 print(df_G3_from_G1.mean())
@@ -159,7 +159,7 @@ df_G3_from_G1.to_csv('output-regression/df_metrics_G3_from_G1.csv')
 # [G2]
 print("[G2]")
 X = base.drop(columns = ['G3', 'G1']).to_numpy()
-df_G3_from_G2 = search(X,y,n_splits,random_state,algorithms,"G3 from [G2]")
+df_G3_from_G2 = search(X,y,n_splits,random_state,algorithms,"[G2]")
 print(df_G3_from_G2)
 print("Medias:")
 print(df_G3_from_G2.mean())
