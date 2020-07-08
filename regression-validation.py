@@ -98,18 +98,17 @@ def search(X, y, n_splits, random_state, algorithms, title):
     if p > alpha:
     	print('Same distributions (fail to reject H0)')
     else:
-    	print('Different distributions (reject H0)')
-        
-    names = list(df_score.columns)   
-    avranks = df_score.mean().values.tolist()
-    print("avranks: ")
-    print(df_score.mean())
-    cd = Orange.evaluation.compute_CD(avranks, n_splits)
-    print("cd:", cd)
-    Orange.evaluation.graph_ranks(avranks, names, cd=cd, width=6, textspace=1.5)
-    plt.title(title)
-    #plt.show()
-    plt.savefig('img/REG' + title + '.png', bbox_inches='tight')
+        print('Different distributions (reject H0)')
+        names = list(df_score.columns)   
+        avranks = df_score.mean().values.tolist()
+        print("avranks: ")
+        print(df_score.mean())
+        cd = Orange.evaluation.compute_CD(avranks, n_splits)
+        print("cd:", cd)
+        Orange.evaluation.graph_ranks(avranks, names, cd=cd, width=6, textspace=1.5)
+        plt.title(title)
+        #plt.show()
+        plt.savefig('img/REG' + title + '.png', bbox_inches='tight')
     
     return df_metrics
 
