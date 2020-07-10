@@ -3,4 +3,4 @@
 Este repositório contém os códigos desenvolvidos para a disciplina de PO-233: Aprendizado de Máquina. Para o projeto, foram utilizados algoritmos de aprendizado de máquina para tentar prever a performance estudantil de estudantes do ensino médio português a partir de uma base de dados contendo notas e dados socio-econômicos e comportamentais sobre estes estudantes.
 
 ## Cadernos em Jupyter
-Cadernos em Jupyter contendo o código final utilizado para as validações e análises exploratórias estão hospedados na núvem e podem ser consultados pela url: [https://notebooks.azure.com/gitoso/projects/po233-cloud-notebooks](https://notebooks.azure.com/gitoso/projects/po233-cloud-notebooks)
+A vizualização dos cadernos em Jupyter contendo a execução da versão final das análises pode ser consultada pela url: [https://nbviewer.jupyter.org/github/gitoso/po233-cloud-notebooks/tree/master/](https://nbviewer.jupyter.org/github/gitoso/po233-cloud-notebooks/tree/master/)
