@@ -5,7 +5,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
         
 
-base = pd.read_csv('dados/student-por.csv', sep = ";")
+base = pd.read_csv('../dados/student-por.csv', sep = ";")
 
 base.drop(['school'], axis=1, inplace=True)
 
@@ -31,4 +31,4 @@ for column in columns:
     scaled_array = scaler.fit_transform(value)
     base[column] = scaled_array
 
-base.to_csv('dados/pre_processed_data.csv', index=False)
+base.to_csv('../dados/pre_processed_data.csv', index=False)

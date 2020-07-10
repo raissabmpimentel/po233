@@ -16,38 +16,6 @@ import Orange
 import matplotlib.pyplot as plt
 from scipy.stats import friedmanchisquare
 
-
-class SortedStratifiedKFold(StratifiedKFold):
-    '''Stratified K-Fold cross validator.
-    Please see :class:`sklearn.model_selection.StratifiedKFold` for
-    documentation for parameters, etc. It is very similar to that
-    except this is for regression of numeric values.
-    This implementation basically assigns a unique label (int here) to
-    each consecutive `n_splits` values after y is sorted. Then rely on
-    StratifiedKFold to split. The idea is borrowed from this `blog
-    <http://scottclowe.com/2016-03-19-stratified-regression-partitions/>`_.
-    See Also
-    --------
-    RepeatedSortedStratifiedKFold
-    '''
-    def __init__(self, n_splits=3, shuffle=False, random_state=None):
-        super().__init__(n_splits, shuffle, random_state)
-
-    def _sort_partition(self, y):
-        n = len(y)
-        cats = np.empty(n, dtype='u4')
-        div, mod = divmod(n, self.n_splits)
-        cats[:n-mod] = np.repeat(range(div), self.n_splits)
-        cats[n-mod:] = div + 1
-        # run argsort twice to get the rank of each y value
-        return cats[np.argsort(np.argsort(y))]
-
-    def split(self, X, y, groups=None):
-        y_cat = self._sort_partition(y)
-        return super().split(X, y_cat, groups)
-
-
-
 # Function: Preprocessing
 def preprocess(base):
 
@@ -59,9 +27,7 @@ def preprocess(base):
     for item in items:
         base = pd.concat([base,pd.get_dummies(base[item], prefix=item)],axis=1)
         base = base.drop([item],axis=1)
-    
-    #base.loc[base['G3'] < 10, 'G3'] = 0
-    #base.loc[base['G3'] >= 10, 'G3'] = 1
+        
     return base
 
 
@@ -122,7 +88,7 @@ algorithms = {
 
 
 # Preprocessing
-base = pd.read_csv('dados/student-por.csv', sep = ";")
+base = pd.read_csv('../dados/student-por.csv', sep = ";")
 base = preprocess(base)
 
 # k-fold numbers
@@ -142,7 +108,7 @@ print("Medias:")
 print(df_G3_from_G1_G2.mean())
 print("Desvio Padrao: ")
 print(df_G3_from_G1_G2.std())
-df_G3_from_G1_G2.to_csv('output-regression/df_metrics_G3_from_G1_G2.csv')
+df_G3_from_G1_G2.to_csv('../output-regression/df_metrics_G3_from_G1_G2.csv')
 
 # [G1]
 print("[G1]")
@@ -153,7 +119,7 @@ print("Medias:")
 print(df_G3_from_G1.mean())
 print("Desvio Padrao: ")
 print(df_G3_from_G1.std())
-df_G3_from_G1.to_csv('output-regression/df_metrics_G3_from_G1.csv')
+df_G3_from_G1.to_csv('../output-regression/df_metrics_G3_from_G1.csv')
 
 # [G2]
 print("[G2]")
@@ -164,7 +130,7 @@ print("Medias:")
 print(df_G3_from_G2.mean())
 print("Desvio Padrao: ")
 print(df_G3_from_G2.std())
-df_G3_from_G2.to_csv('output-regression/df_metrics_G3_from_G2.csv')
+df_G3_from_G2.to_csv('../output-regression/df_metrics_G3_from_G2.csv')
 
 # []
 print("[]")
@@ -175,7 +141,7 @@ print("Medias:")
 print(df_G3.mean())
 print("Desvio Padrao: ")
 print(df_G3.std())
-df_G3.to_csv('output-regression/df_metrics_G3.csv')
+df_G3.to_csv('../output-regression/df_metrics_G3.csv')
 
 # # --- Absences Regression ---
 # y = base['absences'].to_numpy()

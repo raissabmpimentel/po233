@@ -40,7 +40,7 @@ random_state = 4
 verbose = False
 tol = 1e-5
 
-base = pd.read_csv('dados/student-por.csv', sep = ";")
+base = pd.read_csv('../dados/student-por.csv', sep = ";")
 base = base.drop(['school'], axis=1)
 base = base.replace(['LE3', 'GT3'], [0,1])
 items = ['sex', 'address','Pstatus','Mjob','Fjob','reason','guardian','schoolsup','famsup','paid','activities','nursery','higher',
