@@ -75,7 +75,7 @@ def search(X,y,n_splits, random_state,algorithms, title):
         Orange.evaluation.graph_ranks(avranks, names, cd=cd, width=6, textspace=1.5)
         plt.title(title)
         #plt.show()
-        plt.savefig('img/CLA' + title + '.png', bbox_inches='tight')
+        plt.savefig('../plots/CLA' + title + '.png', bbox_inches='tight')
     
     return df_metrics
 
@@ -87,7 +87,7 @@ algorithms = {
     "RF" : (RandomForestClassifier(), { "criterion": ("gini", "entropy"), "max_depth": [5, 10, 20], "n_estimators": [30,50,100], "random_state": [4]})
 }
 
-base = pd.read_csv('dados/student-por.csv', sep = ";")
+base = pd.read_csv('../dados/student-por.csv', sep = ";")
 
 base = preprocess(base)
 
@@ -105,7 +105,7 @@ print("Medias:")
 print(df_G1_G2.mean())
 print("Desvio Padrao: ")
 print(df_G1_G2.std())
-df_G1_G2.to_csv('output-classification/df_metrics_class_from_G1_G2.csv')
+df_G1_G2.to_csv('../output-classification/df_metrics_class_from_G1_G2.csv')
 
 # [G1]
 print("[G1]")
@@ -116,7 +116,7 @@ print("Medias:")
 print(df_G1.mean())
 print("Desvio Padrao: ")
 print(df_G1.std())
-df_G1.to_csv('output-classification/df_metrics_class_from_G1.csv')
+df_G1.to_csv('../output-classification/df_metrics_class_from_G1.csv')
 
 # [G2]
 print("[G2]")
@@ -127,7 +127,7 @@ print("Medias:")
 print(df_G2.mean())
 print("Desvio Padrao: ")
 print(df_G2.std())
-df_G2.to_csv('output-classification/df_metrics_class_from_G2.csv')
+df_G2.to_csv('../output-classification/df_metrics_class_from_G2.csv')
 
 # []
 print("[]")
@@ -138,5 +138,5 @@ print("Medias:")
 print(df_no.mean())
 print("Desvio Padrao: ")
 print(df_no.std())
-df_no.to_csv('output-classification/df_metrics_class_from_nothing.csv')
+df_no.to_csv('../output-classification/df_metrics_class_from_nothing.csv')
 

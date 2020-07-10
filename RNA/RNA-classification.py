@@ -24,7 +24,7 @@ def treinamento(test_size, max_iter, solver, activation, random_state, verbose, 
     precisao = accuracy_score(classe_teste, previsoes)
     return(precisao)
 
-base = pd.read_csv('dados/pre_processed_data.csv')
+base = pd.read_csv('../dados/pre_processed_data.csv')
 base_antes = pd.read_csv('dados/student-por.csv', sep=';')
 base['G3'] = base_antes['G3']
 base.loc[base['G3'] < 10, 'G3'] = 0
